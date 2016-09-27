@@ -20,7 +20,15 @@ public class MaterialGenerator : ModuleRules
                 "ContentBrowser"
             }
 		);
-		//Private Paths
+
+        PrivateDependencyModuleNames.AddRange(
+            new string[] {
+                "PropertyEditor",
+                "LevelEditor"
+            }
+        );
+
+        //Private Paths
         PrivateIncludePaths.AddRange
         (
             new[]

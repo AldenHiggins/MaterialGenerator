@@ -20,4 +20,12 @@ public:
 	static void OnCreateNewMenu(FMenuBarBuilder& InMenuBarBuilder);
 
 	static void createMaterial(FMenuBuilder& InMenuBarBuilder);
+
+	TSharedPtr<FUICommandList> CommandList;
+
+	static void createMaterialGeneratorToolMenu(FMenuBarBuilder& InMenuBarBuilder);
+
+	static void createMaterialGeneratorToolMenuCallback(FMenuBuilder& InMenuBarBuilder);
+
+	static void OnToolWindowClosed(const TSharedRef<SWindow>& Window, UBaseEditorTool* Instance);
 };
