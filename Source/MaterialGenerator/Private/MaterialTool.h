@@ -19,13 +19,13 @@ public:
 	UMaterial *BaseMaterial;
 
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	UTexture2D *Texture1;
+	UTexture2D *Diffuse;
 
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	UTexture2D *Texture2;
+	UTexture2D *Normal;
 
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	UTexture2D *Texture3;
+	UTexture2D *Specular;
 
 	UFUNCTION(Exec)
 	void GenerateMaterial();

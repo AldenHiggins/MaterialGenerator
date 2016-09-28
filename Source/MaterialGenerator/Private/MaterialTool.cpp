@@ -17,7 +17,7 @@ void UMaterialTool::GenerateMaterial()
 {
 	const FString DefaultSuffix = TEXT("_Inst");
 
-	if (Texture1 == NULL || Texture2 == NULL || Texture3 == NULL)
+	if (Diffuse == NULL || Normal == NULL || Specular == NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Have to set texture parameters before a material can be generated!!"));
 		return;
@@ -26,7 +26,12 @@ void UMaterialTool::GenerateMaterial()
 	if (BaseMaterial == NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Have to set a base material before you can generate a material instance!!"));
-		return;
+		BaseMaterial = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("/Game/16068StdrWalk/Materials/Main_MATERIALS/Base_Master.Base_Master")));
+		if (BaseMaterial == NULL)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Couldn't load default base material!!!"));
+			return;
+		}
 	}
 
 	// Create an appropriate and unique name 
@@ -51,9 +56,31 @@ void UMaterialTool::GenerateMaterial()
 
 	if (generatedInstance != NULL)
 	{
-		generatedInstance->SetTextureParameterValueEditorOnly(FName(TEXT("Texture1")), Texture1);
-		generatedInstance->SetTextureParameterValueEditorOnly(FName(TEXT("Texture2")), Texture2);
-		generatedInstance->SetTextureParameterValueEditorOnly(FName(TEXT("Texture3")), Texture3);
+		// Set the Diffuse texture
+		FStaticParameterSet updatedParams;
+		generatedInstance->GetStaticParameterValues(updatedParams);
+		for (int paramIdx = 0; paramIdx < updatedParams.StaticSwitchParameters.Num(); paramIdx++)
+		{
+			if (updatedParams.StaticSwitchParameters[paramIdx].ParameterName == FName("Enable Diffuse Map"))
+			{
+				// Flip the boolean to what we need and override it...
+				updatedParams.StaticSwitchParameters[paramIdx].Value = true;
+				updatedParams.StaticSwitchParameters[paramIdx].bOverride = true;
+			}
+			else if (updatedParams.StaticSwitchParameters[paramIdx].ParameterName == FName("Enable Specular Map"))
+			{
+				// Flip the boolean to what we need and override it...
+				updatedParams.StaticSwitchParameters[paramIdx].Value = true;
+				updatedParams.StaticSwitchParameters[paramIdx].bOverride = true;
+			}
+		}
+
+		// this does absolutely nothing, even though it should!
+		((UMaterialInstance *) generatedInstance)->UpdateStaticPermutation(updatedParams);
+
+		generatedInstance->SetTextureParameterValueEditorOnly(FName(TEXT("Map #1")), Diffuse);
+		generatedInstance->SetTextureParameterValueEditorOnly(FName(TEXT("Normal")), Normal);
+		generatedInstance->SetTextureParameterValueEditorOnly(FName(TEXT("Map Specular")), Specular);
 	}
 
 	generatedInstance->MarkPackageDirty();
