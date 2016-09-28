@@ -33,7 +33,17 @@ void UMaterialTool::GenerateMaterial()
 	FString Name;
 	FString PackageName;
 	FAssetToolsModule& AssetToolsModule = FModuleManager::Get().LoadModuleChecked<FAssetToolsModule>("AssetTools");
-	AssetToolsModule.Get().CreateUniqueAssetName(BaseMaterial->GetOutermost()->GetName(), DefaultSuffix, PackageName, Name);
+	UE_LOG(LogTemp, Warning, TEXT("Base material outer name: %s"), *BaseMaterial->GetOutermost()->GetName());
+	// If the material name hasn't been set just use the base material's name
+	if (NewMaterialName == "")
+	{
+		AssetToolsModule.Get().CreateUniqueAssetName(BaseMaterial->GetOutermost()->GetName(), DefaultSuffix, PackageName, Name);
+	}
+	else
+	{
+		AssetToolsModule.Get().CreateUniqueAssetName(TEXT("/Game/") + NewMaterialName, TEXT(""), PackageName, Name);
+	}
+
 	UMaterialInstanceConstant* generatedInstance = Cast<UMaterialInstanceConstant>(AssetToolsModule.Get().CreateAsset(Name, FPackageName::GetLongPackagePath(PackageName),
 		UMaterialInstanceConstant::StaticClass(), NULL));
 
