@@ -17,9 +17,6 @@ public:
 	virtual void ShutdownModule() override;
 
 	void CreateNewMenu();
-	static void OnCreateNewMenu(FMenuBarBuilder& InMenuBarBuilder);
-
-	static void createMaterial(FMenuBuilder& InMenuBarBuilder);
 
 	TSharedPtr<FUICommandList> CommandList;
 

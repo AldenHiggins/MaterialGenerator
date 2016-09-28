@@ -30,29 +30,9 @@ void MaterialGeneratorModule::CreateNewMenu()
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>(TEXT("PropertyEditor"));
 	PropertyModule.RegisterCustomClassLayout(TEXT("BaseEditorTool"), FOnGetDetailCustomizationInstance::CreateStatic(&FBaseEditorToolCustomization::MakeInstance));
 
-
 	CommandList = MakeShareable(new FUICommandList);
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>( "LevelEditor" );
-
-	//MainMenuExtender = MakeShareable( new FExtender );
-	//MainMenuExtender->AddMenuBarExtension( "Help",
-	//									EExtensionHook::After,
-	//									NULL,
-	//									FMenuBarExtensionDelegate::CreateStatic( &MaterialGeneratorModule::OnCreateNewMenu ) );
-
-	//LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(MainMenuExtender);
-
-	// Add in a button to create the material generation menu
-	//TSharedRef<FExtender> MenuExtender(new FExtender());
-	//MenuExtender->AddMenuExtension(
-	//	TEXT("Help"),
-	//	EExtensionHook::After,
-	//	CommandList.ToSharedRef(),
-	//	FMenuExtensionDelegate::CreateStatic(&MaterialGeneratorModule::createMaterialGeneratorToolMenu));
-
-	//LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(MenuExtender);
-
 
 	MainMenuExtender = MakeShareable(new FExtender);
 	MainMenuExtender->AddMenuBarExtension("Help",
@@ -63,26 +43,11 @@ void MaterialGeneratorModule::CreateNewMenu()
 	LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(MainMenuExtender);
 }
 
-void MaterialGeneratorModule::OnCreateNewMenu( FMenuBarBuilder& InMenuBarBuilder )
-{
-	InMenuBarBuilder.AddPullDownMenu
-	(
-		LOCTEXT( "MaterialCreateEditor1", "Create new Material" ),
-		LOCTEXT( "MaterialCreateEditorTooltip1", "Generate a new Kilograph material" ),
-		FNewMenuDelegate::CreateStatic(&MaterialGeneratorModule::createMaterial)
-	);
-}
-
-void MaterialGeneratorModule::createMaterial(FMenuBuilder& InMenuBarBuilder)
-{
-	
-}
-
 void MaterialGeneratorModule::createMaterialGeneratorToolMenu(FMenuBarBuilder& InMenuBarBuilder)
 {
 	InMenuBarBuilder.AddPullDownMenu
 	(
-		LOCTEXT("MaterialCreateEditor1", "Create new Material"),
+		LOCTEXT("MaterialCreateEditor1", "Create New Material"),
 		LOCTEXT("MaterialCreateEditorTooltip1", "Generate a new Kilograph material"),
 		FNewMenuDelegate::CreateStatic(&MaterialGeneratorModule::createMaterialGeneratorToolMenuCallback)
 	);
@@ -90,8 +55,6 @@ void MaterialGeneratorModule::createMaterialGeneratorToolMenu(FMenuBarBuilder& I
 
 void MaterialGeneratorModule::createMaterialGeneratorToolMenuCallback(FMenuBuilder& InMenuBarBuilder)
 {
-	UE_LOG(LogTemp, Warning, TEXT("You've clicked my cool button!!!"));
-
 	UBaseEditorTool* ToolInstance = NewObject<UBaseEditorTool>(GetTransientPackage(), UMaterialTool::StaticClass());
 	ToolInstance->AddToRoot();
 
